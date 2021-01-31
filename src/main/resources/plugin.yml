@@ -1,0 +1,4 @@
+name: Dimension_conflict
+version: @version@
+main: com.github.chaosindustry.dimension_conflict.Dimension_conflict
+api-version: 1.15
