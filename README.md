@@ -1,2 +1,2 @@
 # DimensionConflict
-dprecated
+deprecated
