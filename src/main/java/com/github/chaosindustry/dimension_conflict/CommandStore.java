@@ -10,11 +10,11 @@ import org.bukkit.inventory.PlayerInventory;//プレイヤーのインベント�
 import org.bukkit.Material;//アイテム操作でよく使う。
 
 
-public class beDiamond implements CommandExecutor{
+public class CommandStore implements CommandExecutor{
 
     private final Dimension_conflict plugin;
 
-    public beDiamond(Dimension_conflict plugin) {
+    public CommandStore(Dimension_conflict plugin) {
         this.plugin = plugin;
     }
 

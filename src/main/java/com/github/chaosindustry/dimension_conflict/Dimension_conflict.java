@@ -5,12 +5,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class Dimension_conflict extends JavaPlugin {
     // conducted in plugin off we don't use absolutely
 
-    // Plugin startup logic　pluginが発生するイベントをしていする。
+    // Plugin startup logic pluginが発生するイベントをしていする。
     @Override
     public void onEnable() {
         //getCommand()は指定のコマンドが入力されたらプラグインを実行する。
         //setExecutor()でどのプラグインが実行されるか指定する。
-        getCommand("IwannabeaDiamondman").setExecutor(new beDiamond(this));
+        getCommand("firegarden").setExecutor(new CommandStore(this));
+        getCommand("Iwannabeadiamondman").setExecutor(new CommandStore(this));
     }
 
     //プラグインを終了させるイベントを指定する。
