@@ -10,8 +10,8 @@ public final class Dimension_conflict extends JavaPlugin {
     public void onEnable() {
         //getCommand()は指定のコマンドが入力されたらプラグインを実行する。
         //setExecutor()でどのプラグインが実行されるか指定する。
-        getCommand("firegarden").setExecutor(new CommandStore(this));
-        getCommand("Iwannabeadiamondman").setExecutor(new CommandStore(this));
+        //getCommand("").setExecutor(new MotionCommandExecutor(this));
+        getServer().getPluginManager().registerEvents(new Landmine(), this);
     }
 
     //プラグインを終了させるイベントを指定する。

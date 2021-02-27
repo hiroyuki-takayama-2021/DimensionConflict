@@ -8,3 +8,10 @@ commands:
     usage: /IwannabeaDiamondman [player]
     permission: dimension_conflict.IwannabeaDiamondman
     permission-message: You cannot be diamond, idiot!
+
+commands:
+  firegarden:
+    description: This is a hyer command.
+    usage: /firegarden count [player]
+    permission: dimension_conflict.firegarden
+    permission-message: Take a dood care of our environment!

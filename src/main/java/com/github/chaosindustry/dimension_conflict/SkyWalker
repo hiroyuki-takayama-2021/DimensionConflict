@@ -1,0 +1,83 @@
+//public classで継承可能にする。SkyWalkerはListener型であると宣言する。
+public class SkyWalker implements Listener{
+    private Player player;
+    private int r = 2;//半径
+
+
+　　//voidは戻り値のないモジュール（関数）であると宣言使うのに使う。
+    //人間に対しては最後まで読まなくても返り値がないことをあらかじめ伝える効果があり、コンピューターに対してはこれを使うことでコンパイラに影響する。
+    //pythonやRと違ってjavaでは引数の型を指定しないとモジュールを動かすことができない。例）function( モジュールの型、モジュールの名前)
+　　　public void skywall(Player player,String stroke){
+	//ChatColor.AQUA +strokeは矢印の色を指定している。用意された色らしいので楽らしい。
+        player.sendTitle("You can walk on the sky!!", ChatColor.AQUA +stroke,0,10,0);
+
+	//taskにBukkitRunnableを引き継ぐ。ただし後者は以前に作ったものではなく、＝を用いてその場で作っている。
+        //ちなみにBukiitRunnableという名前でタイマーが使える。
+        BukkitRunnable task = new BukkitRunnable() {
+            int count = 0;
+            public void run() {
+		//プレイヤーがイベントを発生の位置。この場合は毎秒歩いた時に位置情報を取得する。
+                //playerの中にlocationが入っていて、それをgetlocation()でその情報だけ取り出して、それをsubtract()で詳細なデータを取り出して、
+                //それをstartLocに代入する。。
+                Location startLoc = player.getLocation().subtract(r, r, r);
+
+		//最初でiを定義する。一番最初のiとはプレイヤーの位置startLocのx軸の値である。
+                //i<startLoc.getBlock+r*2でプレイヤーが初期位置からr*2の範囲を超えるまでforループが続くことを指名している。
+                //i++はループ毎にiが１づつ足されていくことを示している。
+                //その下のforループはz軸に関して同じことをしている。
+                for (int i = startLoc.getBlockX(); i < startLoc.getBlockX() + r * 2; i++) {
+                    for (int k = startLoc.getBlockZ(); k < startLoc.getBlockZ() + r * 2; k++) {
+
+                        //locにLocationを引き継ぐ。後者は以前に作ったものではなく、＝を用いてその場で作っている。
+			//startLoc.getWorld()はプレイヤーが存在するワールドを返す？
+			//startLoc.getBlockY()+1はプレイヤーの初期位置のy軸の値に１を足した位置に存在するブロックを示す。
+			//つまりlocはプレイヤーの存在するWorldのプレイヤーが存在する位置からy軸方向に1進んだ位置を示している。
+                        Location loc = new Location(startLoc.getWorld(), i, startLoc.getBlockY() + 1, k);
+
+			//bはlocに該当するブロックを指定する。
+			Block b = loc.getBlock();
+
+			//もしbがAIRタイプ（空）のブロックであれば以下のプログラムを実行する。
+                        if (b.getType() == Material.AIR) {
+
+			　　//bをCYAN_STAINED_GLASSタイプ（シアンステンドグラス）に変換する。
+                            b.setType(Material.CYAN_STAINED_GLASS);
+
+			　　//taskにBukkitRunnableを引き継ぐ。bをAIRタイプに変換して、cancal()が何のためにあるのかわからない。
+                            BukkitRunnable task3 = new BukkitRunnable() {
+                                public void run() {
+                                    b.setType(Material.AIR);
+                                    cancel();
+                                }
+                            };
+                            task3.runTaskTimer(StrokePlugin.getPlugin(), 60L, 0L); //足場を消すプログラム。３秒ごとに足場を消していく。
+                        }
+                    }
+                }
+                if(count > 200){ //countが200(１０秒)を超えるとキャンセル。
+                    cancel();
+                }
+                count++; //２０分の１秒でcountに１を追加する。
+            }
+        };
+        task.runTaskTimer(StrokePlugin.getPlugin(), 0L,1L);// 1/20分の１秒でtask実行する。
+    }
+}
+
+//taskがどういう事を実行するかをまとめると
+//1/20秒毎に呼び出され、そのたびに以下のことを実行する
+//プレイヤーが位置する座標を取得する
+//その座標軸を(x,y,z)とすると、(x-r <= x <= x+r, y+1,z+r <= z <= r)の範囲に位置するブロックが空であればそれをシアンステンドグラスに変更する。
+//本当は一気に当該範囲のブロックを変換しているのではなくブロックをひとつづつ指定しているのだが、ループが速いために一気にやっているように見える。
+//60/20秒ごとに出現させたシアンステンドグラスを空に変換する。
+//countが200を超えるとtaskの呼び出しを止める。
+
+
+質問
+・task3のcancel()がなぜ必要かわからなねぇ
+・StrokePlugin.getPlugin()とは何か？
+・ifの中で定義したtask3をifの外で実行したり、taskの中でtskを呼び出しているが、これはjavaの特徴なのかな。
+（Rだと前者のようなことはできない、後者はまだ定義されていないkン数を呼び出している扱いになりエラーが出る）
+・forループでブロックが出現する範囲を制限していると思うが、ループの条件を見ると単純に
+startLoc.getBlockX() + r * 2になるまでiに位置を足し続けることになっている。
+これだとブロック外貨のように出現するのではないか。
